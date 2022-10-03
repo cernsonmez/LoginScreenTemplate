@@ -37,7 +37,7 @@ struct CustomTopTabBar: View {
     
     var body: some View {
         HStack(alignment: .top, spacing: 10.0) {
-            Spacer()
+        Spacer()
         TabBarButton(text: "Sign In", isSelected: .constant(tabIndex == 0))
             .onTapGesture {
                 onButtonTapped(index: 0)
@@ -48,6 +48,7 @@ struct CustomTopTabBar: View {
                 onButtonTapped(index: 1)
             }
             .cornerRadius(15.0)
+            .padding(.trailing, 10.0)
         }
     }
     
@@ -71,10 +72,10 @@ struct SignInTabView: View{
     var body: some View{
         Spacer()
         VStack(spacing: 20.0){
-            LoginText()
+            HeaderText(text: "Sign In")
             UserNameTextField()
             PasswordSecureField()
-            SignInButton()
+            ContinueButton(text: "Login")
             ForgotPasswordButton()
         }
     }
@@ -82,18 +83,22 @@ struct SignInTabView: View{
 
 struct SignUpTabView: View{
     var body: some View{
-        ZStack{
-            Rectangle()
-                .foregroundColor(.yellow)
-            Text("Sign Up")
+        Spacer()
+        VStack(spacing: 20.0){
+            HeaderText(text: "Sign Up")
+            EmailTextField()
+            UserNameTextField()
+            PasswordSecureField()
+            ContinueButton(text: "Sign Up")
         }
     }
 }
 
-struct LoginText: View {
+struct HeaderText: View {
+    let text: String
     var body: some View {
         VStack {
-            Text("Sign In")
+            Text(text)
                 .font(.largeTitle)
                 .fontWeight(.semibold)
                 .foregroundColor(Color.gray)
@@ -107,6 +112,22 @@ struct UserNameTextField: View {
 
     var body: some View {
         TextField("Username", text: $username)
+            .padding()
+            .textContentType(UITextContentType.nickname)
+            .multilineTextAlignment(TextAlignment.center)
+            .frame(width: 300, height: 50)
+            .background(whiteSmokeColor)
+            .foregroundColor(.orange)
+            .cornerRadius(8.0)
+    }
+}
+
+struct EmailTextField: View {
+
+    @State var email: String = ""
+
+    var body: some View {
+        TextField("E-mail", text: $email)
             .padding()
             .textContentType(UITextContentType.nickname)
             .multilineTextAlignment(TextAlignment.center)
@@ -133,9 +154,10 @@ struct PasswordSecureField: View {
     }
 }
 
-struct SignInButton: View {
+struct ContinueButton: View {
+    let text: String
     var body: some View {
-        Button("Login") {
+        Button(text) {
             /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/ /*@END_MENU_TOKEN@*/
         }.font(.headline)
             .foregroundColor(.white)
