@@ -9,37 +9,19 @@ import SwiftUI
 
 let whiteSmokeColor = Color(red: 245.0/255.0, green: 245.0/255.0, blue: 244.0/255.0, opacity: 1.0)
 
-
 struct ContentView: View {
-    @State var username: String = ""
-    @State var userpassword: String = ""
-    
-
+   
+    @State var tabIndex = 0
     var body: some View {
-        VStack {
-            LoginText()
-            TextField("Username", text: $username)
-                .padding()
-                .textContentType(UITextContentType.nickname)
-                .multilineTextAlignment(TextAlignment.center)
-                .frame(width: 300, height: 50)
-                .background(whiteSmokeColor)
-                .cornerRadius(5.0)
-            TextField("Password", text: $userpassword)
-                .padding()
-                .textContentType(UITextContentType.password)
-                .multilineTextAlignment(TextAlignment.center)
-                .frame(width: 300, height: 50)
-                .background(whiteSmokeColor)
-                .cornerRadius(5.0)
-            Button("Login") {
-                /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/ /*@END_MENU_TOKEN@*/
-            }.font(.headline)
-                .foregroundColor(.white)
-                .padding()
-                .frame(width: 150, height: 50)
-                .background(Color.orange)
-                .cornerRadius(15.0)
+        VStack{
+            CustomTopTabBar(tabIndex: $tabIndex)
+            if tabIndex == 0 {
+                SignInTabView()
+            }
+            else {
+                SignUpTabView()
+            }
+            Spacer()
         }
     }
 }
@@ -50,14 +32,131 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-struct LoginText: View {
+struct CustomTopTabBar: View {
+    @Binding var tabIndex: Int
+    
     var body: some View {
-        VStack {
-            Text("Login")
-                .font(.largeTitle)
-                .fontWeight(.semibold)
-                .foregroundColor(Color.gray)
-            .padding()
+        HStack(alignment: .top, spacing: 10.0) {
+            Spacer()
+        TabBarButton(text: "Sign In", isSelected: .constant(tabIndex == 0))
+            .onTapGesture {
+                onButtonTapped(index: 0)
+            }
+            .cornerRadius(15.0)
+        TabBarButton(text: "Sign Up", isSelected: .constant(tabIndex == 1))
+            .onTapGesture {
+                onButtonTapped(index: 1)
+            }
+            .cornerRadius(15.0)
+        }
+    }
+    
+    private func onButtonTapped(index: Int) {
+        withAnimation { tabIndex = index }
+    }
+}
+
+struct TabBarButton: View {
+    let text: String
+    @Binding var isSelected: Bool
+    var body: some View {
+        Text(text)
+            .padding(.all, 10.0)
+            .foregroundColor(isSelected ? .white : .gray)
+            .background(isSelected ? .orange : .clear)
+    }
+}
+
+struct SignInTabView: View{
+    var body: some View{
+        Spacer()
+        VStack(spacing: 20.0){
+            LoginText()
+            UserNameTextField()
+            PasswordSecureField()
+            SignInButton()
+            ForgotPasswordButton()
         }
     }
 }
+
+struct SignUpTabView: View{
+    var body: some View{
+        ZStack{
+            Rectangle()
+                .foregroundColor(.yellow)
+            Text("Sign Up")
+        }
+    }
+}
+
+struct LoginText: View {
+    var body: some View {
+        VStack {
+            Text("Sign In")
+                .font(.largeTitle)
+                .fontWeight(.semibold)
+                .foregroundColor(Color.gray)
+        }
+    }
+}
+
+struct UserNameTextField: View {
+
+    @State var username: String = ""
+
+    var body: some View {
+        TextField("Username", text: $username)
+            .padding()
+            .textContentType(UITextContentType.nickname)
+            .multilineTextAlignment(TextAlignment.center)
+            .frame(width: 300, height: 50)
+            .background(whiteSmokeColor)
+            .foregroundColor(.orange)
+            .cornerRadius(8.0)
+    }
+}
+
+struct PasswordSecureField: View {
+    
+    @State var userpassword: String = ""
+
+    var body: some View {
+        SecureField("Password", text: $userpassword)
+            .padding(.bottom, 0.0)
+            .textContentType(UITextContentType.password)
+            .multilineTextAlignment(TextAlignment.center)
+            .frame(width: 300, height: 50)
+            .background(whiteSmokeColor)
+            .foregroundColor(.orange)
+            .cornerRadius(8.0)
+    }
+}
+
+struct SignInButton: View {
+    var body: some View {
+        Button("Login") {
+            /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/ /*@END_MENU_TOKEN@*/
+        }.font(.headline)
+            .foregroundColor(.white)
+            .padding()
+            .frame(width: 150, height: 50)
+            .background(Color.orange)
+            .cornerRadius(15.0)
+    }
+}
+
+struct ForgotPasswordButton: View {
+    var body: some View {
+        Button("Forgot your password?") {
+            /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/ /*@END_MENU_TOKEN@*/
+        }.font(.footnote)
+            .foregroundColor(.orange)
+            .padding()
+            .cornerRadius(15.0)
+    }
+}
+
+
+
+
